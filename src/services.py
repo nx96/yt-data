@@ -129,11 +129,14 @@ def get_detail_videos(listVideos: str) -> Optional[str]:
         if items:
             for item in items:
                 response['videoId'] = item["id"]
-                response['duration'] = item["contentDetails"]["duration"]
                 response['viewCount'] = item["statistics"]["viewCount"]
                 response['likeCount'] = item["statistics"]["likeCount"]
                 response['favoriteCount'] = item["statistics"]["favoriteCount"]
                 response['commentCount'] = item["statistics"]["commentCount"]
+                
+                # when video is not live
+                response['duration'] = item["contentDetails"].get("duration", None)
+                
                 response_list.append(response.copy())
     
     return response_list
@@ -144,5 +147,3 @@ def get_data_from_YT_channel(username: str) -> Optional[str]:
     list_videos = get_list_videos_from_id_playlist(playlistUploadId)
     list_videos_detail = get_detail_videos(list_videos)
     return list_videos, list_videos_detail, viewCount, subscriberCount
-
-#"SUERTE-TV"
