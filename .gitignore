@@ -1,3 +1,13 @@
+# omitir carpetas de ambiente virtual
 *env/*
+# omitir carpetas de cache
+*pycache*
 
+# omitir archivos generados
+outputs/*
+
+# mantener archivo de ejemplo
+!outputs/data.example.csv
+
+# omitir archivo con credenciales
 *.env
