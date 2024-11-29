@@ -1,7 +1,7 @@
 import pandas as pd
 from typing import Optional
 
-from channel import DEFAULT_SHOW, SHOWS, USERNAME
+from channel import DEFAULT_SHOW, SHOWS
 from services import get_data_from_YT_channel
 from utils import apply_all_format
 
@@ -22,13 +22,16 @@ def get_df_(username: str) -> Optional[str]:
 
 def generate_csv(username: str) -> Optional[str]:
     df = get_df_(username)
-    df.to_csv(f'./{DIR_OUTPUT}/data_{username}.csv', index=False)
+    path = f'./{DIR_OUTPUT}/data_{username}.csv'
+    df.to_csv(path, index=False)
+    print(f"File created at {path}")
 
 def generate_excel_by_csv(username: str) -> Optional[str]:
     path = f"./{DIR_OUTPUT}/data_{username}.csv"
     df = pd.read_csv(path)
-    df.to_excel(f'./{DIR_OUTPUT}/data_{username}.xlsx', index=False, sheet_name="data")
-
+    path = f'./{DIR_OUTPUT}/data_{username}.xlsx'
+    df.to_excel(path, index=False, sheet_name="data")
+    print(f"File created at {path}")
 
 def max_len_shows():
     max_len = 0
