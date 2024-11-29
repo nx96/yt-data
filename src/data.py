@@ -3,7 +3,7 @@ from typing import Optional
 
 from .channel import DEFAULT_SHOW, SHOWS
 from .services import get_data_from_YT_channel
-from .utils import apply_all_format
+from .utils import apply_all_format, parse_duration_to_seconds
 
 DIR_OUTPUT = 'outputs'
 
@@ -18,6 +18,7 @@ def get_df_(username: str) -> Optional[str]:
     df['viewTotalCount'] = viewCount
     df['subscriberCount'] = subscriberCount
     df["url"] = "https://www.youtube.com/watch?v=" + df["videoId"]
+    df["duration_seconds"] = df["duration"].apply(parse_duration_to_seconds)
     return df
 
 def generate_csv(username: str) -> Optional[str]:
@@ -54,5 +55,5 @@ def add_column_show(username: str) -> Optional[str]:
             if title.find(show['id']) != -1:
                 df.at[index, "show"] = show['name']
                 break
-    df = df.loc[:, ['videoId', 'show', 'title', 'viewCount', 'likeCount', 'favoriteCount', 'commentCount', 'duration', 'publishedAt', 'url', 'viewTotalCount', 'subscriberCount']]
+    df = df.loc[:, ['videoId', 'show', 'title', 'viewCount', 'likeCount', 'favoriteCount', 'commentCount', 'duration', 'duration_seconds', 'publishedAt', 'url', 'viewTotalCount', 'subscriberCount']]
     df.to_csv(path, index=False)

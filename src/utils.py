@@ -22,3 +22,25 @@ def apply_all_format(text: str) -> str:
     text = remove_special_chars(text)
     text = remove_extra_whitespace(text)
     return text.lower()
+
+def list_without_empty(string: str, split: str) -> Optional[str]:
+    list = string.split(split)
+    return [x for x in list if x]
+
+def parse_duration_to_seconds(duration):
+    duration = duration.replace("PT", "")
+    duration = duration.replace("S", "")
+
+    if "H" in duration:
+        replace = "*3600"
+        if len(list_without_empty(duration,"H")) > 1:
+            replace = replace + "+"
+        duration = duration.replace("H", replace)
+    
+    if "M" in duration:
+        replace = "*60"
+        if len(list_without_empty(duration,"M")) > 1:
+            replace = replace + "+"
+        duration = duration.replace("M", replace)
+
+    return int(eval(duration))
