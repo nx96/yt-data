@@ -1,7 +1,6 @@
 import re
 from typing import Optional
 
-
 def remove_accented_chars(text: str) -> str:
     accented = {"á": "a", "é": "e", "í": "i", "ó": "o", "ú": "u"}
     for word, initial in accented.items():
@@ -16,5 +15,10 @@ def remove_special_chars(text: str, remove_digits: Optional[bool] = False) -> st
     return pattern.sub('', text)
 
 def remove_extra_whitespace(text: str) -> str:  
-    return re.sub('\s+', ' ',text)
+    return re.sub('\s+', '',text)
 
+def apply_all_format(text: str) -> str:
+    text = remove_accented_chars(text)
+    text = remove_special_chars(text)
+    text = remove_extra_whitespace(text)
+    return text.lower()
