@@ -1,11 +1,12 @@
 import pandas as pd
 from typing import Optional
 
-from channel import DEFAULT_SHOW, SHOWS
+from channel import DEFAULT_SHOW, SHOWS, USERNAME
 from services import get_data_from_YT_channel
 from utils import apply_all_format
 
 DIR_OUTPUT = 'outputs'
+
 def get_df_(username: str) -> Optional[str]:
     # call services
     list_videos, list_videos_detail, viewCount, subscriberCount = get_data_from_YT_channel(username)
@@ -16,15 +17,17 @@ def get_df_(username: str) -> Optional[str]:
     df = pd.merge(df, df_detail, on='videoId', how='left')
     df['viewTotalCount'] = viewCount
     df['subscriberCount'] = subscriberCount
+    df["url"] = "https://www.youtube.com/watch?v=" + df["videoId"]
     return df
 
 def generate_csv(username: str) -> Optional[str]:
     df = get_df_(username)
     df.to_csv(f'./{DIR_OUTPUT}/data_{username}.csv', index=False)
 
-def generate_exce_by_csv(csv_file: str) -> Optional[str]:
-    df = pd.read_csv(csv_file)
-    df.to_excel(f'./{DIR_OUTPUT}/data_{csv_file}.xlsx', index=False)
+def generate_excel_by_csv(username: str) -> Optional[str]:
+    path = f"./{DIR_OUTPUT}/data_{username}.csv"
+    df = pd.read_csv(path)
+    df.to_excel(f'./{DIR_OUTPUT}/data_{username}.xlsx', index=False, sheet_name="data")
 
 
 def max_len_shows():
@@ -34,8 +37,9 @@ def max_len_shows():
             max_len = len(show['id'])
     return max_len
  
-def add_column_show(csv_file: str) -> Optional[str]:
-    df = pd.read_csv(csv_file)
+def add_column_show(username: str) -> Optional[str]:
+    path = f"./{DIR_OUTPUT}/data_{username}.csv"
+    df = pd.read_csv(path)
     max_len = max_len_shows()
     df["show"] = ""
     for index in df.index:
@@ -47,7 +51,5 @@ def add_column_show(csv_file: str) -> Optional[str]:
             if title.find(show['id']) != -1:
                 df.at[index, "show"] = show['name']
                 break
-    df = df.loc[:, ['videoId', 'show', 'title', 'viewCount', 'likeCount', 'favoriteCount', 'commentCount', 'duration', 'publishedAt', 'viewTotalCount', 'subscriberCount']]
-    df.to_csv(csv_file, index=False)
-
-# add_column_show(f"./{DIR_OUTPUT}/data_SUERTE-TV.csv")
+    df = df.loc[:, ['videoId', 'show', 'title', 'viewCount', 'likeCount', 'favoriteCount', 'commentCount', 'duration', 'publishedAt', 'url', 'viewTotalCount', 'subscriberCount']]
+    df.to_csv(path, index=False)
