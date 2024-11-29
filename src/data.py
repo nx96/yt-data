@@ -1,9 +1,9 @@
 import pandas as pd
 from typing import Optional
 
-from channel import DEFAULT_SHOW, SHOWS
-from services import get_data_from_YT_channel
-from utils import apply_all_format
+from .channel import DEFAULT_SHOW, SHOWS
+from .services import get_data_from_YT_channel
+from .utils import apply_all_format
 
 DIR_OUTPUT = 'outputs'
 
