@@ -190,7 +190,7 @@ def get_detail_videos(list_videos: str) -> Optional[str]:
     response = {}
     for i in range(0, len(list_videos), max_results):
         part_list = list_videos[i:i + max_results]
-        ids = [str(item["videoId"]) for item in part_list]
+        ids = [str(item["video_id"]) for item in part_list]
         id_string = ",".join(ids)
         data = get_detail_videos_from_id(id_string)
         items = data.get("items", [])

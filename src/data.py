@@ -56,5 +56,5 @@ def add_column_show(username: str) -> Optional[str]:
             if title.find(show['id']) != -1:
                 df.at[index, "show"] = show['name']
                 break
-    df = df.loc[:, ['video_id', 'show', 'title', 'viewCount', 'likeCount', 'favoriteCount', 'commentCount', 'duration', 'duration_seconds', 'publishedAt', 'url', 'view_total_count', 'subscriber_count']]
+    df = df.loc[:, ['video_id', 'show', 'title', 'view_count', 'like_count', 'favorite_count', 'comment_count', 'duration', 'duration_seconds', 'published_at', 'url', 'view_total_count', 'subscriber_count']]
     df.to_csv(path, index=False)
