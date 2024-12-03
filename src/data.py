@@ -26,6 +26,7 @@ def generate_csv(username: str) -> Optional[str]:
     path = f'./{DIR_OUTPUT}/data_{username}.csv'
     df.to_csv(path, index=False)
     print(f"File created at {path}")
+    return df
 
 def generate_excel_by_csv(username: str) -> Optional[str]:
     path = f"./{DIR_OUTPUT}/data_{username}.csv"
