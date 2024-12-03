@@ -9,15 +9,15 @@ DIR_OUTPUT = 'outputs'
 
 def get_df_(username: str) -> Optional[str]:
     # call services
-    list_videos, list_videos_detail, viewCount, subscriberCount = get_data_from_YT_channel(username)
+    list_videos, list_videos_detail, view_count, subscriber_count = get_data_from_YT_channel(username)
     # generate df
     df = pd.DataFrame(list_videos)
     df_detail = pd.DataFrame(list_videos_detail)
     # merge df
-    df = pd.merge(df, df_detail, on='videoId', how='left')
-    df['viewTotalCount'] = viewCount
-    df['subscriberCount'] = subscriberCount
-    df["url"] = "https://www.youtube.com/watch?v=" + df["videoId"]
+    df = pd.merge(df, df_detail, on='video_id', how='left')
+    df['view_total_count'] = view_count
+    df['subscriber_count'] = subscriber_count
+    df["url"] = "https://www.youtube.com/watch?v=" + df["video_id"]
     df["duration_seconds"] = df["duration"].apply(parse_duration_to_seconds)
     return df
 
@@ -56,5 +56,5 @@ def add_column_show(username: str) -> Optional[str]:
             if title.find(show['id']) != -1:
                 df.at[index, "show"] = show['name']
                 break
-    df = df.loc[:, ['videoId', 'show', 'title', 'viewCount', 'likeCount', 'favoriteCount', 'commentCount', 'duration', 'duration_seconds', 'publishedAt', 'url', 'viewTotalCount', 'subscriberCount']]
+    df = df.loc[:, ['video_id', 'show', 'title', 'viewCount', 'likeCount', 'favoriteCount', 'commentCount', 'duration', 'duration_seconds', 'publishedAt', 'url', 'view_total_count', 'subscriber_count']]
     df.to_csv(path, index=False)
