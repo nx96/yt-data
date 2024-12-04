@@ -47,14 +47,18 @@ def add_column_show(username: str) -> Optional[str]:
     df = pd.read_csv(path)
     max_len = max_len_shows()
     df["show"] = ""
+    df["show_id"] = ""
     for index in df.index:
         title = df.at[index, "title"]
         title = apply_all_format(title)
         title = title[:max_len]
         df.at[index, "show"] = DEFAULT_SHOW
+        df.at[index, "show_id"] = DEFAULT_SHOW
         for show in SHOWS:
             if title.find(show['id']) != -1:
                 df.at[index, "show"] = show['name']
+                df.at[index, "show_id"] = show['id']
                 break
-    df = df.loc[:, ['video_id', 'show', 'title', 'view_count', 'like_count', 'favorite_count', 'comment_count', 'duration', 'duration_seconds', 'published_at', 'url', 'view_total_count', 'subscriber_count']]
+    df = df.loc[:, ['video_id', 'show', 'show_id','title', 'view_count', 'like_count', 'favorite_count', 'comment_count', 'duration', 'duration_seconds', 'published_at', 'url', 'view_total_count', 'subscriber_count']]
     df.to_csv(path, index=False)
+    return df
