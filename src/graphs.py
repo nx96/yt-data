@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 from src.channel import DEFAULT_SHOW, SHOWS, DEFAULT_COLOR
+import pandas as pd
 import time
 
 from src.utils import delete_emojis
@@ -184,6 +185,27 @@ def plot_show_by_comment_count(df):
         bbox_to_anchor=(0.5, 1.15),
         ncol=2
     )
+
+    plt.tight_layout()
+    plt.show()
+
+def plot_evolution(df, program):
+    evolution_program = df[df['show'] == program].sort_values(by='published_at')
+    evolution_program['published_at'] = pd.to_datetime(evolution_program['published_at'])
+    plt.figure(figsize=(10, 6))
+    plt.plot(
+        evolution_program['published_at'], 
+        evolution_program['like_view'], 
+        color=PROGRAM_COLOR_MAP[program], 
+        linewidth=2, 
+        marker='.', 
+        markerfacecolor='black'
+    )
+
+    plt.xlabel("Fecha", fontsize=11)
+    plt.ylabel("Popularidad", fontsize=11)
+    plt.xticks(rotation=45)
+    plt.grid(axis="y", linestyle=":", alpha=0.8)
 
     plt.tight_layout()
     plt.show()
