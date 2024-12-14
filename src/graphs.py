@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from src.channel import DEFAULT_SHOW, SHOWS, DEFAULT_COLOR
 import time
 
-from src.utils import remove_special_chars
+from src.utils import delete_emojis
 
 def seconds_to_time(seconds):
     return time.strftime("%HH:%MM:%SS", time.gmtime(seconds))
@@ -45,8 +45,8 @@ def plot_longest_video(df):
     fig.patch.set_facecolor("black")
 
     # Agregar textos
-    text = remove_special_chars(longest_video.iloc[0]["title"])
-    text = f'VIDEO: {text}'
+    text = delete_emojis(longest_video.iloc[0]["title"])
+    text = f'TITULO: {text}'
     plt.text(x=0.2, y=0.9, s=text, fontdict=FONT)
     
     text = f'LIKES: {longest_video.iloc[0]["like_count"]}'
@@ -61,10 +61,7 @@ def plot_longest_video(df):
     plt.show()
 
 def plot_show_by_view_count(df):
-    most_viewed_by_show = df.loc[df.groupby('show_id')['view_count'].idxmax()]
-    for _, row in most_viewed_by_show.iterrows():
-        label = f"{row['show']} =>\t {row['title']}"
-        print(label)
+    most_viewed_by_show = df.loc[df.groupby('show_id')['view_count'].idxmax()].sort_values(by='view_count', ascending=True)
 
     plt.figure(figsize=(10, 6))
     bars = plt.bar(
@@ -86,6 +83,23 @@ def plot_show_by_view_count(df):
             s=format_value(height),
             ha='center', va='bottom', fontsize=10
         )
+    
+    legend_elements = []
+    for _, row in most_viewed_by_show.iterrows():
+        color = PROGRAM_COLOR_MAP[row["show"]]
+        label = f"{delete_emojis(row['title'])}"
+        legend_elements.append(plt.Rectangle((0, 0), 1, 1, color=color, label=label))
+    
+    plt.legend(
+        handles=legend_elements,
+        loc='center',
+        fontsize=9,
+        title_fontsize=10,
+        frameon=True,
+        bbox_to_anchor=(0.5, 1.15),
+        ncol=2
+    )
+
     plt.tight_layout()
     plt.show()
 
