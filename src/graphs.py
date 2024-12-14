@@ -70,11 +70,10 @@ def plot_show_by_view_count(df):
         color=[PROGRAM_COLOR_MAP[show] for show in most_viewed_by_show["show"]]
     )
 
-    # Personalizar el gráfico
     plt.xlabel("Programa", fontsize=11)
     plt.ylabel("Reproducciones", fontsize=11)
     plt.xticks(rotation=45)
-    plt.grid(axis="y", linestyle=":", alpha=0.7)
+    plt.grid(axis="y", linestyle="-", alpha=0.7)
     for bar in bars:
         height = bar.get_height()
         plt.text(
@@ -105,10 +104,7 @@ def plot_show_by_view_count(df):
 
 
 def plot_show_by_like_count(df):
-    most_liked_by_show = df.loc[df.groupby('show_id')['like_count'].idxmax()]
-    for _, row in most_liked_by_show.iterrows():
-        label = f"{row['show']} =>\t {row['title']}"
-        print(label)
+    most_liked_by_show = df.loc[df.groupby('show_id')['like_count'].idxmax()].sort_values(by='like_count', ascending=True)
 
     plt.figure(figsize=(10, 6))
     bars = plt.bar(
@@ -117,11 +113,10 @@ def plot_show_by_like_count(df):
         color=[PROGRAM_COLOR_MAP[show] for show in most_liked_by_show["show"]]
     )
 
-    # Personalizar el gráfico
     plt.xlabel("Programa", fontsize=11)
-    plt.ylabel("Reproducciones", fontsize=11)
+    plt.ylabel("Likes", fontsize=11)
     plt.xticks(rotation=45)
-    plt.grid(axis="y", linestyle=":", alpha=0.7)
+    plt.grid(axis="y", linestyle="-", alpha=0.7)
     for bar in bars:
         height = bar.get_height()
         plt.text(
@@ -130,15 +125,29 @@ def plot_show_by_like_count(df):
             s=format_value(height),
             ha='center', va='bottom', fontsize=10
         )
+
+    legend_elements = []
+    for _, row in most_liked_by_show.iterrows():
+        color = PROGRAM_COLOR_MAP[row["show"]]
+        label = f"{delete_emojis(row['title'])}"
+        legend_elements.append(plt.Rectangle((0, 0), 1, 1, color=color, label=label))
+    
+    plt.legend(
+        handles=legend_elements,
+        loc='center',
+        fontsize=9,
+        title_fontsize=10,
+        frameon=True,
+        bbox_to_anchor=(0.5, 1.15),
+        ncol=2
+    )
+
     plt.tight_layout()
     plt.show()
 
 
 def plot_show_by_comment_count(df):
-    most_comment_show = df.loc[df.groupby('show_id')['comment_count'].idxmax()]
-    for _, row in most_comment_show.iterrows():
-        label = f"{row['show']} =>\t {row['title']}"
-        print(label)
+    most_comment_show = df.loc[df.groupby('show_id')['comment_count'].idxmax()].sort_values(by='comment_count', ascending=True)
 
     plt.figure(figsize=(10, 6))
     bars = plt.bar(
@@ -147,11 +156,10 @@ def plot_show_by_comment_count(df):
         color=[PROGRAM_COLOR_MAP[show] for show in most_comment_show["show"]]
     )
 
-    # Personalizar el gráfico
     plt.xlabel("Programa", fontsize=11)
-    plt.ylabel("Reproducciones", fontsize=11)
+    plt.ylabel("Comentarios", fontsize=11)
     plt.xticks(rotation=45)
-    plt.grid(axis="y", linestyle=":", alpha=0.7)
+    plt.grid(axis="y", linestyle="-", alpha=0.7)
     for bar in bars:
         height = bar.get_height()
         plt.text(
@@ -160,5 +168,22 @@ def plot_show_by_comment_count(df):
             s=format_value(height),
             ha='center', va='bottom', fontsize=10
         )
+
+    legend_elements = []
+    for _, row in most_comment_show.iterrows():
+        color = PROGRAM_COLOR_MAP[row["show"]]
+        label = f"{delete_emojis(row['title'])}"
+        legend_elements.append(plt.Rectangle((0, 0), 1, 1, color=color, label=label))
+    
+    plt.legend(
+        handles=legend_elements,
+        loc='center',
+        fontsize=9,
+        title_fontsize=10,
+        frameon=True,
+        bbox_to_anchor=(0.5, 1.15),
+        ncol=2
+    )
+
     plt.tight_layout()
     plt.show()
