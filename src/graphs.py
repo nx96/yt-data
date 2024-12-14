@@ -15,6 +15,12 @@ FONT = {
     'size': 16
 }
 
+FONT_TAGS = {
+    'family': 'Arial',
+    'color': '#000000',
+    'size': 11
+}
+
 PROGRAM_COLOR_MAP = {show["name"]: show["color"] for show in SHOWS}
 PROGRAM_COLOR_MAP["Otros"] = DEFAULT_COLOR
 
@@ -61,142 +67,69 @@ def plot_longest_video(df):
 
     plt.show()
 
-def plot_show_by_view_count(df):
+
+def plot_base(df: pd.DataFrame, colum: str, ylabel : str):
+    plt.figure(figsize=(10, 6))
+    bars = plt.bar(
+        df["show"], 
+        df[colum], 
+        color=[PROGRAM_COLOR_MAP[show] for show in df["show"]]
+    )
+
+    plt.xlabel("Programa", fontdict=FONT_TAGS)
+    plt.ylabel(ylabel, fontdict=FONT_TAGS)
+    plt.xticks(rotation=45)
+    plt.grid(axis="y", linestyle="-", alpha=0.7)
+    for bar in bars:
+        height = bar.get_height()
+        plt.text(
+            x=bar.get_x() + bar.get_width() / 2,
+            y=height - 100,
+            s=format_value(height),
+            ha='center', va='bottom', fontsize=10
+        )
+
+    legend_elements = []
+    for _, row in df.iterrows():
+        color = PROGRAM_COLOR_MAP[row["show"]]
+        label = f"{delete_emojis(row['title'])}"
+        legend_elements.append(plt.Rectangle((0, 0), 1, 1, color=color, label=label))
+    
+    plt.legend(
+        handles=legend_elements,
+        loc='center',
+        fontsize=9,
+        title_fontsize=10,
+        frameon=True,
+        bbox_to_anchor=(0.5, 1.15),
+        ncol=2
+    )
+
+    plt.tight_layout()
+    plt.show()
+
+def plot_show_by_view_count(df: pd.DataFrame):
     most_viewed_by_show = df.loc[df.groupby('show_id')['view_count'].idxmax()].sort_values(by='view_count', ascending=True)
 
-    plt.figure(figsize=(10, 6))
-    bars = plt.bar(
-        most_viewed_by_show["show"], 
-        most_viewed_by_show["view_count"], 
-        color=[PROGRAM_COLOR_MAP[show] for show in most_viewed_by_show["show"]]
-    )
+    plot_base(df=most_viewed_by_show, colum="view_count", ylabel="Reproducciones")
 
-    plt.xlabel("Programa", fontsize=11)
-    plt.ylabel("Reproducciones", fontsize=11)
-    plt.xticks(rotation=45)
-    plt.grid(axis="y", linestyle="-", alpha=0.7)
-    for bar in bars:
-        height = bar.get_height()
-        plt.text(
-            x=bar.get_x() + bar.get_width() / 2,
-            y=height - 100,
-            s=format_value(height),
-            ha='center', va='bottom', fontsize=10
-        )
-    
-    legend_elements = []
-    for _, row in most_viewed_by_show.iterrows():
-        color = PROGRAM_COLOR_MAP[row["show"]]
-        label = f"{delete_emojis(row['title'])}"
-        legend_elements.append(plt.Rectangle((0, 0), 1, 1, color=color, label=label))
-    
-    plt.legend(
-        handles=legend_elements,
-        loc='center',
-        fontsize=9,
-        title_fontsize=10,
-        frameon=True,
-        bbox_to_anchor=(0.5, 1.15),
-        ncol=2
-    )
-
-    plt.tight_layout()
-    plt.show()
-
-
-def plot_show_by_like_count(df):
+def plot_show_by_like_count(df: pd.DataFrame):
     most_liked_by_show = df.loc[df.groupby('show_id')['like_count'].idxmax()].sort_values(by='like_count', ascending=True)
 
-    plt.figure(figsize=(10, 6))
-    bars = plt.bar(
-        most_liked_by_show["show"], 
-        most_liked_by_show["like_count"], 
-        color=[PROGRAM_COLOR_MAP[show] for show in most_liked_by_show["show"]]
-    )
+    plot_base(df=most_liked_by_show, colum="like_count", ylabel="Likes")
 
-    plt.xlabel("Programa", fontsize=11)
-    plt.ylabel("Likes", fontsize=11)
-    plt.xticks(rotation=45)
-    plt.grid(axis="y", linestyle="-", alpha=0.7)
-    for bar in bars:
-        height = bar.get_height()
-        plt.text(
-            x=bar.get_x() + bar.get_width() / 2,
-            y=height - 100,
-            s=format_value(height),
-            ha='center', va='bottom', fontsize=10
-        )
-
-    legend_elements = []
-    for _, row in most_liked_by_show.iterrows():
-        color = PROGRAM_COLOR_MAP[row["show"]]
-        label = f"{delete_emojis(row['title'])}"
-        legend_elements.append(plt.Rectangle((0, 0), 1, 1, color=color, label=label))
-    
-    plt.legend(
-        handles=legend_elements,
-        loc='center',
-        fontsize=9,
-        title_fontsize=10,
-        frameon=True,
-        bbox_to_anchor=(0.5, 1.15),
-        ncol=2
-    )
-
-    plt.tight_layout()
-    plt.show()
-
-
-def plot_show_by_comment_count(df):
+def plot_show_by_comment_count(df: pd.DataFrame):
     most_comment_show = df.loc[df.groupby('show_id')['comment_count'].idxmax()].sort_values(by='comment_count', ascending=True)
 
-    plt.figure(figsize=(10, 6))
-    bars = plt.bar(
-        most_comment_show["show"], 
-        most_comment_show["comment_count"], 
-        color=[PROGRAM_COLOR_MAP[show] for show in most_comment_show["show"]]
-    )
+    plot_base(df=most_comment_show, colum="comment_count", ylabel="Comentarios")
 
-    plt.xlabel("Programa", fontsize=11)
-    plt.ylabel("Comentarios", fontsize=11)
-    plt.xticks(rotation=45)
-    plt.grid(axis="y", linestyle="-", alpha=0.7)
-    for bar in bars:
-        height = bar.get_height()
-        plt.text(
-            x=bar.get_x() + bar.get_width() / 2,
-            y=height - 100,
-            s=format_value(height),
-            ha='center', va='bottom', fontsize=10
-        )
-
-    legend_elements = []
-    for _, row in most_comment_show.iterrows():
-        color = PROGRAM_COLOR_MAP[row["show"]]
-        label = f"{delete_emojis(row['title'])}"
-        legend_elements.append(plt.Rectangle((0, 0), 1, 1, color=color, label=label))
-    
-    plt.legend(
-        handles=legend_elements,
-        loc='center',
-        fontsize=9,
-        title_fontsize=10,
-        frameon=True,
-        bbox_to_anchor=(0.5, 1.15),
-        ncol=2
-    )
-
-    plt.tight_layout()
-    plt.show()
-
-def plot_evolution(df, program):
-    evolution_program = df[df['show'] == program].sort_values(by='published_at')
-    evolution_program['published_at'] = pd.to_datetime(evolution_program['published_at'])
+def plot_evolution(df: pd.DataFrame, color: str, colum: str):
+    df['published_at'] = pd.to_datetime(df['published_at'])
     plt.figure(figsize=(10, 6))
     plt.plot(
-        evolution_program['published_at'], 
-        evolution_program['like_view'], 
-        color=PROGRAM_COLOR_MAP[program], 
+        df['published_at'], 
+        df[colum], 
+        color=color, 
         linewidth=2, 
         marker='.', 
         markerfacecolor='black'
@@ -209,3 +142,21 @@ def plot_evolution(df, program):
 
     plt.tight_layout()
     plt.show()
+
+def plot_evolution_by_view(df: pd.DataFrame, program : str):
+    evolution_program = df[df['show'] == program].sort_values(by='published_at')
+    color=PROGRAM_COLOR_MAP[program]
+
+    plot_evolution(df=evolution_program, color=color, colum="view_count")
+
+def plot_evolution_by_like(df: pd.DataFrame, program : str):
+    evolution_program = df[df['show'] == program].sort_values(by='published_at')
+    color=PROGRAM_COLOR_MAP[program]
+
+    plot_evolution(df=evolution_program, color=color, colum="like_count")
+
+def plot_evolution_by_popularity(df: pd.DataFrame, program : str):
+    evolution_program = df[df['show'] == program].sort_values(by='published_at')
+    color=PROGRAM_COLOR_MAP[program]
+
+    plot_evolution(df=evolution_program, color=color, colum="like_view")
