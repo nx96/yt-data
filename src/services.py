@@ -203,7 +203,7 @@ def get_detail_videos(list_videos: str) -> Optional[str]:
                 response['comment_count'] = item["statistics"]["commentCount"]
                 
                 # when video is not live
-                response['duration'] = item["contentDetails"].get("duration", None)
+                response['duration'] = item["contentDetails"].get("duration", 0)
                 
                 response_list.append(response.copy())
     
