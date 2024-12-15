@@ -8,5 +8,9 @@ SHOWS = [
     {"id": "siemprelomismo",    "name": "#SIEMPRELOMISMO",    "color": "#882ce4"},
 ]
 
+KEYWORDS = [
+    "piloto", "recap"
+]
+
 DEFAULT_SHOW = "Otros"
 DEFAULT_COLOR = "#ff6444"
