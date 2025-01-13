@@ -182,3 +182,21 @@ def plot_chapters_by_show(df: pd.DataFrame):
 def plot_duration_by_show(df: pd.DataFrame):
     df_duration = df[~df['show_id'].isin([DEFAULT_SHOW])].groupby(['show']).agg({'duration_seconds': 'sum'}).sort_values(by='duration_seconds', ascending=True).reset_index()
     plot_base(df=df_duration, colum="duration_seconds", ylabel="Duración", limit_height=True, print_legends=False, format_time=True)
+
+def plot_like_time(df: pd.DataFrame, program: str):
+    evolution_program = df[df['show'] == program].sort_values(by='published_at')
+    color=PROGRAM_COLOR_MAP[program]
+
+    # Gráficos de dispersión
+    plt.figure(figsize=(10, 6))
+    plt.scatter(evolution_program['duration_seconds'], evolution_program['like_count'], color=color, alpha=0.6)
+    plt.xlabel('Duración Videos', fontsize=11)
+    plt.ylabel('Likes', fontsize=11)
+
+    formatter = FuncFormatter(lambda x, _: seconds_to_time(seconds=int(x)))
+    plt.gca().xaxis.set_major_formatter(formatter)
+
+    plt.xticks(rotation=45)
+    plt.grid(axis="y", linestyle=":", alpha=0.8)
+    plt.tight_layout()
+    plt.show()
